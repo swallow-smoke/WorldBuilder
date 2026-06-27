@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using WorldBuilder.Editor.BinImporter;
 using WorldBuilder.Editor.BiomeSetter;
@@ -41,6 +42,33 @@ namespace WorldBuilder.Editor
             WorldBuilderToolRegistry.Register(new BinImporterTool(biomeMap, voxelStore));
             WorldBuilderToolRegistry.Register(new SpawnHeatmapTool(spawnerQuery));
             WorldBuilderToolRegistry.Register(new UndoHistoryTool());
+
+            ToxicZoneTool.ToxicZoneTool toxicZone = new ToxicZoneTool.ToxicZoneTool();
+            TemperatureZoneTool.TemperatureZoneTool temperatureZone = new TemperatureZoneTool.TemperatureZoneTool();
+            PressureZoneTool.PressureZoneTool pressureZone = new PressureZoneTool.PressureZoneTool();
+            VisibilityZoneTool.VisibilityZoneTool visibilityZone = new VisibilityZoneTool.VisibilityZoneTool();
+
+            List<IEnvironmentZoneProvider> zoneProviders = new List<IEnvironmentZoneProvider>
+            {
+                temperatureZone,
+                toxicZone,
+                pressureZone,
+                visibilityZone
+            };
+
+            WorldBuilderToolRegistry.Register(new AirPocketTool.AirPocketTool());
+            WorldBuilderToolRegistry.Register(new WaterCurrentTool.WaterCurrentTool());
+            WorldBuilderToolRegistry.Register(new BioluminescenceTool.BioluminescenceTool());
+            WorldBuilderToolRegistry.Register(pressureZone);
+            WorldBuilderToolRegistry.Register(temperatureZone);
+            WorldBuilderToolRegistry.Register(toxicZone);
+            WorldBuilderToolRegistry.Register(visibilityZone);
+            WorldBuilderToolRegistry.Register(new WreckageTool.WreckageTool());
+            WorldBuilderToolRegistry.Register(new CreatureSpawnZoneTool.CreatureSpawnZoneTool());
+            WorldBuilderToolRegistry.Register(new EventTriggerZoneTool.EventTriggerZoneTool());
+            WorldBuilderToolRegistry.Register(new DepthLayerVisualizer.DepthLayerVisualizerTool());
+            WorldBuilderToolRegistry.Register(new EnvironmentOverlayTool.EnvironmentOverlayTool(zoneProviders));
+            WorldBuilderToolRegistry.Register(new MaterialBatchTool.MaterialBatchTool(biomeMap));
         }
     }
 }
