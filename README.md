@@ -1,6 +1,6 @@
 # WorldBuilder
 
-Astra-Nope 전용 Unity 6 URP 씬 편집 패키지.
+Unity 6 URP 전용 씬 편집 패키지.
 
 ---
 
