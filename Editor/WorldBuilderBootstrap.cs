@@ -21,6 +21,7 @@ namespace WorldBuilder.Editor
         static WorldBuilderBootstrap()
         {
             IChunkBiomeMap biomeMap = new ChunkBiomeMap();
+            IBiomeMap prefabBrushBiomeMap = new ChunkBiomeMapAdapter(biomeMap);
             IBiomeDataProvider biomeProvider = new EditorBiomeDataProvider();
             ISpawnerSceneQuery spawnerQuery = new SpawnerSceneQuery();
             VoxelStoreAsset voxelStore = VoxelStoreLocator.LoadOrCreate();
@@ -29,7 +30,7 @@ namespace WorldBuilder.Editor
             SceneDataCollector collector = new SceneDataCollector(biomeMap, spawnerQuery, voxelStore);
 
             WorldBuilderToolRegistry.Register(new MeshEditTool());
-            WorldBuilderToolRegistry.Register(new PrefabBrushTool());
+            WorldBuilderToolRegistry.Register(new PrefabBrushTool(prefabBrushBiomeMap));
             WorldBuilderToolRegistry.Register(new TerrainPaintTool());
             WorldBuilderToolRegistry.Register(new BiomeSetterTool(biomeMap, biomeProvider));
             WorldBuilderToolRegistry.Register(new SpawnEditTool(spawnerQuery));
