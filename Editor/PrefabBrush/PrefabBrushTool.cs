@@ -46,8 +46,9 @@ namespace WorldBuilder.Editor.PrefabBrush
             EnsureInit();
 
             VisualElement root = new VisualElement();
-            root.Add(new Label("Prefab Brush PRO++"));
-
+            // root.Add(new Label("Prefab Brush PRO++"));
+            
+            root.Add(InspectorHelp.Build(ToolName, "help.prefabBrush"));
             root.Add(BuildSeedSection());
             root.Add(BuildBrushSection());
             root.Add(BuildPlacementSection());
