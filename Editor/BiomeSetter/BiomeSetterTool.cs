@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 using WorldBuilder.Runtime.Data;
 
 namespace WorldBuilder.Editor.BiomeSetter
@@ -22,7 +24,9 @@ namespace WorldBuilder.Editor.BiomeSetter
             this.biomeProvider = biomeProvider;
         }
 
-        public string ToolName => "Biome Setter";
+        public string ToolName => WorldBuilderLocalization.Get("tool.biomeSetter");
+
+        public Texture2D ToolIcon => null;
 
         public void OnEnable()
         {
@@ -34,18 +38,33 @@ namespace WorldBuilder.Editor.BiomeSetter
             return SceneRaycaster.TryRaycast(Event.current.mousePosition, out hit);
         }
 
-        public void OnInspectorGUI()
+        public VisualElement CreateInspectorGUI()
         {
-            selectedBiome = (BiomeType)EditorGUILayout.EnumPopup("Biome", selectedBiome);
-            chunkSize = EditorGUILayout.FloatField("Chunk Size", chunkSize);
-            eraseMode = EditorGUILayout.Toggle("Erase Mode", eraseMode);
+            VisualElement root = new VisualElement();
 
-            EditorGUILayout.LabelField("Assigned Chunks", biomeMap.Entries.Count.ToString());
+            root.Add(InspectorHelp.Build(ToolName, "help.biomeSetter"));
 
-            if (GUILayout.Button("Refresh Biome Colors"))
-            {
-                RefreshColors();
-            }
+            EnumField biome = new EnumField("Biome", selectedBiome);
+            biome.RegisterValueChangedCallback(evt => selectedBiome = (BiomeType)evt.newValue);
+            root.Add(biome);
+
+            FloatField size = new FloatField("Chunk Size") { value = chunkSize };
+            size.RegisterValueChangedCallback(evt => chunkSize = evt.newValue);
+            root.Add(size);
+
+            Toggle erase = new Toggle("Erase Mode") { value = eraseMode };
+            erase.RegisterValueChangedCallback(evt => eraseMode = evt.newValue);
+            root.Add(erase);
+
+            Label count = new Label();
+            root.Add(count);
+
+            Button refresh = new Button(RefreshColors) { text = "Refresh Biome Colors" };
+            root.Add(refresh);
+
+            root.schedule.Execute(() => count.text = "Assigned Chunks: " + biomeMap.Entries.Count).Every(200);
+
+            return root;
         }
 
         public void OnSceneGUI()

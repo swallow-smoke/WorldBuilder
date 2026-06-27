@@ -8,12 +8,14 @@ namespace WorldBuilder.Editor.Export
     {
         private readonly IChunkBiomeMap biomeMap;
         private readonly ISpawnerSceneQuery spawnerQuery;
+        private readonly IVoxelStore voxelStore;
         private readonly ChunkCoordCalculator calculator = new ChunkCoordCalculator();
 
-        public SceneDataCollector(IChunkBiomeMap biomeMap, ISpawnerSceneQuery spawnerQuery)
+        public SceneDataCollector(IChunkBiomeMap biomeMap, ISpawnerSceneQuery spawnerQuery, IVoxelStore voxelStore)
         {
             this.biomeMap = biomeMap;
             this.spawnerQuery = spawnerQuery;
+            this.voxelStore = voxelStore;
         }
 
         public ChunkData[] Collect(float chunkSize)
@@ -46,11 +48,17 @@ namespace WorldBuilder.Editor.Export
                     });
                 }
 
+                VoxelData voxels = default;
+                if (voxelStore != null)
+                {
+                    voxelStore.TryGetVoxelData(coord, out voxels);
+                }
+
                 chunks.Add(new ChunkData
                 {
                     position = calculator.ToWorldOrigin(coord, chunkSize),
                     biome = entry.Value,
-                    voxels = default,
+                    voxels = voxels,
                     spawns = spawns.ToArray()
                 });
             }

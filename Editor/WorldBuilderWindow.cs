@@ -1,33 +1,62 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace WorldBuilder.Editor
 {
     public sealed class WorldBuilderWindow : EditorWindow
     {
-        [SerializeField] private float leftPanelWidth = 180f;
+        private const string UIPath = "Packages/com.emiteat.worldbuilder/Editor/UI/";
 
-        private int selectedIndex;
-        private Vector2 toolListScroll;
-        private Vector2 inspectorScroll;
+        private WorldBuilderUIController controller;
+        private VisualTreeAsset itemAsset;
+
+        private Label titleLabel;
+        private Label statusLabel;
+        private Button languageToggle;
+        private ScrollView toolList;
+        private VisualElement inspectorContainer;
+
+        private IWorldBuilderTool selectedTool;
+        private Button selectedButton;
 
         [MenuItem("WorldBuilder/Open")]
         public static void Open()
         {
             WorldBuilderWindow window = GetWindow<WorldBuilderWindow>();
             window.titleContent = new GUIContent("WorldBuilder");
+            window.minSize = new Vector2(600f, 400f);
             window.Show();
+        }
+
+        public void CreateGUI()
+        {
+            controller = new WorldBuilderUIController();
+
+            VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UIPath + "WorldBuilderWindow.uxml");
+            StyleSheet style = AssetDatabase.LoadAssetAtPath<StyleSheet>(UIPath + "WorldBuilderWindow.uss");
+            itemAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UIPath + "ToolListItem.uxml");
+
+            tree.CloneTree(rootVisualElement);
+            rootVisualElement.styleSheets.Add(style);
+
+            titleLabel = rootVisualElement.Q<Label>("title");
+            statusLabel = rootVisualElement.Q<Label>("status-label");
+            languageToggle = rootVisualElement.Q<Button>("language-toggle");
+            toolList = rootVisualElement.Q<ScrollView>("tool-list");
+            inspectorContainer = rootVisualElement.Q<VisualElement>("inspector-container");
+
+            languageToggle.clicked += OnLanguageToggleClicked;
+
+            EnableTools();
+            Rebuild();
+
+            rootVisualElement.schedule.Execute(UpdateStatus).Every(500);
         }
 
         private void OnEnable()
         {
-            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
-            for (int i = 0; i < tools.Count; i++)
-            {
-                tools[i].OnEnable();
-            }
-
             SceneView.duringSceneGui += OnSceneGui;
         }
 
@@ -36,78 +65,124 @@ namespace WorldBuilder.Editor
             SceneView.duringSceneGui -= OnSceneGui;
         }
 
-        private void OnGUI()
+        private void OnSceneGui(SceneView sceneView)
         {
-            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
-
-            using (new EditorGUILayout.HorizontalScope())
+            if (selectedTool != null)
             {
-                DrawToolList(tools);
-                DrawInspector(tools);
+                selectedTool.OnSceneGUI();
             }
         }
 
-        private void OnSceneGui(SceneView sceneView)
+        private void EnableTools()
         {
-            IWorldBuilderTool tool = GetSelectedTool();
-            if (tool == null)
+            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
+            for (int i = 0; i < tools.Count; i++)
             {
+                tools[i].OnEnable();
+            }
+        }
+
+        private void Rebuild()
+        {
+            titleLabel.text = WorldBuilderLocalization.Get("header.title");
+            languageToggle.text = WorldBuilderLocalization.Current == WorldBuilderLocalization.Language.Korean ? "KO" : "EN";
+
+            BuildToolList();
+
+            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
+            if (selectedTool == null && tools.Count > 0)
+            {
+                selectedTool = tools[0];
+            }
+
+            if (selectedTool != null)
+            {
+                SelectTool(selectedTool);
+            }
+            else
+            {
+                statusLabel.text = WorldBuilderLocalization.Get("status.ready");
+            }
+        }
+
+        private void BuildToolList()
+        {
+            toolList.Clear();
+            selectedButton = null;
+
+            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
+            for (int i = 0; i < tools.Count; i++)
+            {
+                IWorldBuilderTool tool = tools[i];
+                VisualElement item = itemAsset.Instantiate();
+                Button button = item.Q<Button>("tool-button");
+                Image icon = item.Q<Image>("tool-icon");
+                Label label = item.Q<Label>("tool-name");
+
+                icon.image = tool.ToolIcon;
+                label.text = tool.ToolName;
+                button.userData = tool;
+                button.clicked += () => SelectTool(tool);
+
+                toolList.Add(item);
+            }
+        }
+
+        private void SelectTool(IWorldBuilderTool tool)
+        {
+            selectedTool = tool;
+            controller.OnToolSelected(tool, inspectorContainer);
+
+            if (selectedButton != null)
+            {
+                selectedButton.RemoveFromClassList("selected");
+            }
+
+            selectedButton = FindButton(tool);
+            if (selectedButton != null)
+            {
+                selectedButton.AddToClassList("selected");
+            }
+
+            statusLabel.text = tool.ToolName;
+        }
+
+        private Button FindButton(IWorldBuilderTool tool)
+        {
+            List<Button> buttons = toolList.Query<Button>("tool-button").ToList();
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                if (buttons[i].userData == tool)
+                {
+                    return buttons[i];
+                }
+            }
+
+            return null;
+        }
+
+        private void OnLanguageToggleClicked()
+        {
+            controller.OnLanguageToggle(statusLabel);
+            Rebuild();
+        }
+
+        private void UpdateStatus()
+        {
+            if (selectedTool == null)
+            {
+                statusLabel.text = WorldBuilderLocalization.Get("status.ready");
                 return;
             }
 
-            tool.OnSceneGUI();
-        }
-
-        private IWorldBuilderTool GetSelectedTool()
-        {
-            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
-            if (tools.Count == 0)
+            IReadOnlyList<string> history = UndoHistory.Entries;
+            if (history.Count > 0)
             {
-                return null;
+                statusLabel.text = selectedTool.ToolName + "  |  " + history[history.Count - 1];
             }
-
-            selectedIndex = Mathf.Clamp(selectedIndex, 0, tools.Count - 1);
-            return tools[selectedIndex];
-        }
-
-        private void DrawToolList(IReadOnlyList<IWorldBuilderTool> tools)
-        {
-            using (new EditorGUILayout.VerticalScope(GUILayout.Width(leftPanelWidth)))
+            else
             {
-                EditorGUILayout.LabelField("Tools", EditorStyles.boldLabel);
-
-                toolListScroll = EditorGUILayout.BeginScrollView(toolListScroll);
-                for (int i = 0; i < tools.Count; i++)
-                {
-                    bool isSelected = i == selectedIndex;
-                    if (GUILayout.Toggle(isSelected, tools[i].ToolName, EditorStyles.toolbarButton) && !isSelected)
-                    {
-                        selectedIndex = i;
-                        SceneView.RepaintAll();
-                    }
-                }
-                EditorGUILayout.EndScrollView();
-            }
-        }
-
-        private void DrawInspector(IReadOnlyList<IWorldBuilderTool> tools)
-        {
-            using (new EditorGUILayout.VerticalScope())
-            {
-                if (tools.Count == 0)
-                {
-                    EditorGUILayout.HelpBox("No tools registered.", MessageType.Info);
-                    return;
-                }
-
-                selectedIndex = Mathf.Clamp(selectedIndex, 0, tools.Count - 1);
-                IWorldBuilderTool tool = tools[selectedIndex];
-
-                EditorGUILayout.LabelField(tool.ToolName, EditorStyles.boldLabel);
-
-                inspectorScroll = EditorGUILayout.BeginScrollView(inspectorScroll);
-                tool.OnInspectorGUI();
-                EditorGUILayout.EndScrollView();
+                statusLabel.text = selectedTool.ToolName;
             }
         }
     }

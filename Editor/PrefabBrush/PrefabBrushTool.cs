@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace WorldBuilder.Editor.PrefabBrush
 {
@@ -14,7 +16,9 @@ namespace WorldBuilder.Editor.PrefabBrush
         [SerializeField] private bool eraseMode;
         [SerializeField] private List<GameObject> prefabs = new List<GameObject>();
 
-        public string ToolName => "Prefab Brush";
+        public string ToolName => WorldBuilderLocalization.Get("tool.prefabBrush");
+
+        public Texture2D ToolIcon => null;
 
         public void OnEnable()
         {
@@ -25,39 +29,86 @@ namespace WorldBuilder.Editor.PrefabBrush
             return SceneRaycaster.TryRaycast(Event.current.mousePosition, out hit);
         }
 
-        public void OnInspectorGUI()
+        public VisualElement CreateInspectorGUI()
         {
-            brushRadius = EditorGUILayout.Slider("Brush Radius", brushRadius, 0.1f, 50f);
-            brushDensity = EditorGUILayout.IntSlider("Brush Density", brushDensity, 1, 50);
-            minScale = EditorGUILayout.FloatField("Min Scale", minScale);
-            maxScale = EditorGUILayout.FloatField("Max Scale", maxScale);
-            alignToNormal = EditorGUILayout.Toggle("Align To Normal", alignToNormal);
-            eraseMode = EditorGUILayout.Toggle("Erase Mode", eraseMode);
+            VisualElement root = new VisualElement();
 
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Prefabs", EditorStyles.boldLabel);
+            root.Add(InspectorHelp.Build(ToolName, "help.prefabBrush"));
 
-            int removeIndex = -1;
-            for (int i = 0; i < prefabs.Count; i++)
-            {
-                using (new EditorGUILayout.HorizontalScope())
-                {
-                    prefabs[i] = (GameObject)EditorGUILayout.ObjectField(prefabs[i], typeof(GameObject), false);
-                    if (GUILayout.Button("X", GUILayout.Width(22f)))
-                    {
-                        removeIndex = i;
-                    }
-                }
-            }
+            Slider radius = new Slider("Brush Radius", 0.1f, 50f) { value = brushRadius };
+            radius.RegisterValueChangedCallback(evt => brushRadius = evt.newValue);
+            root.Add(radius);
 
-            if (removeIndex >= 0)
-            {
-                prefabs.RemoveAt(removeIndex);
-            }
+            SliderInt density = new SliderInt("Brush Density", 1, 50) { value = brushDensity };
+            density.RegisterValueChangedCallback(evt => brushDensity = evt.newValue);
+            root.Add(density);
 
-            if (GUILayout.Button("Add Prefab Slot"))
+            FloatField min = new FloatField("Min Scale") { value = minScale };
+            min.RegisterValueChangedCallback(evt => minScale = evt.newValue);
+            root.Add(min);
+
+            FloatField max = new FloatField("Max Scale") { value = maxScale };
+            max.RegisterValueChangedCallback(evt => maxScale = evt.newValue);
+            root.Add(max);
+
+            Toggle align = new Toggle("Align To Normal") { value = alignToNormal };
+            align.RegisterValueChangedCallback(evt => alignToNormal = evt.newValue);
+            root.Add(align);
+
+            Toggle erase = new Toggle("Erase Mode") { value = eraseMode };
+            erase.RegisterValueChangedCallback(evt => eraseMode = evt.newValue);
+            root.Add(erase);
+
+            VisualElement list = new VisualElement();
+            root.Add(list);
+
+            Button add = new Button(() =>
             {
                 prefabs.Add(null);
+                RebuildList(list);
+            })
+            {
+                text = "Add Prefab Slot"
+            };
+            root.Add(add);
+
+            RebuildList(list);
+            return root;
+        }
+
+        private void RebuildList(VisualElement list)
+        {
+            list.Clear();
+
+            for (int i = 0; i < prefabs.Count; i++)
+            {
+                int index = i;
+
+                VisualElement row = new VisualElement();
+                row.style.flexDirection = FlexDirection.Row;
+
+                ObjectField field = new ObjectField
+                {
+                    objectType = typeof(GameObject),
+                    allowSceneObjects = false,
+                    value = prefabs[index]
+                };
+                field.style.flexGrow = 1f;
+                field.RegisterValueChangedCallback(evt => prefabs[index] = evt.newValue as GameObject);
+
+                Button remove = new Button(() =>
+                {
+                    prefabs.RemoveAt(index);
+                    RebuildList(list);
+                })
+                {
+                    text = "X"
+                };
+                remove.style.width = 22f;
+
+                row.Add(field);
+                row.Add(remove);
+                list.Add(row);
             }
         }
 
@@ -130,6 +181,7 @@ namespace WorldBuilder.Editor.PrefabBrush
                 instance.transform.localScale = Vector3.one * Random.Range(minScale, maxScale);
 
                 Undo.RegisterCreatedObjectUndo(instance, "Paint Prefab");
+                UndoHistory.Push("Paint Prefab");
             }
         }
 
@@ -149,6 +201,7 @@ namespace WorldBuilder.Editor.PrefabBrush
                 if ((go.transform.position - center).sqrMagnitude <= sqr)
                 {
                     Undo.DestroyObjectImmediate(go);
+                    UndoHistory.Push("Erase Prefab");
                 }
             }
         }

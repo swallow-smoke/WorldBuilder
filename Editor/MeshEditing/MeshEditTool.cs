@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace WorldBuilder.Editor.MeshEditing
 {
@@ -16,7 +18,9 @@ namespace WorldBuilder.Editor.MeshEditing
         private Vector2 boxStart;
         private Vector2 boxEnd;
 
-        public string ToolName => "Mesh Editing";
+        public string ToolName => WorldBuilderLocalization.Get("tool.meshEdit");
+
+        public Texture2D ToolIcon => null;
 
         public void OnEnable()
         {
@@ -28,34 +32,62 @@ namespace WorldBuilder.Editor.MeshEditing
             if (activeMesh != null)
             {
                 Undo.RecordObject(activeMesh, label);
+                UndoHistory.Push(label);
             }
         }
 
-        public void OnInspectorGUI()
+        public VisualElement CreateInspectorGUI()
         {
-            selector.DrawSelector();
-            handleSize = EditorGUILayout.Slider("Handle Size", handleSize, 0.005f, 0.3f);
+            VisualElement root = new VisualElement();
 
-            if (!selector.HasMesh)
+            ObjectField meshField = new ObjectField("Mesh Filter")
             {
-                EditorGUILayout.HelpBox("Select a MeshFilter with a mesh. Shift-drag in the scene to box-select vertices.", MessageType.Info);
-                Release();
-                return;
-            }
-
-            if (selector.Mesh != activeMesh)
+                objectType = typeof(MeshFilter),
+                allowSceneObjects = true,
+                value = selector.Target
+            };
+            meshField.RegisterValueChangedCallback(evt =>
             {
-                LoadMesh(selector.Mesh);
-            }
+                selector.SetTarget(evt.newValue as MeshFilter);
+                SyncMesh();
+            });
 
-            EditorGUILayout.LabelField("Vertices", vertices != null ? vertices.Length.ToString() : "0");
-            EditorGUILayout.LabelField("Selected", selection.Count.ToString());
+            Slider handle = new Slider("Handle Size", 0.005f, 0.3f) { value = handleSize };
+            handle.RegisterValueChangedCallback(evt => handleSize = evt.newValue);
 
-            if (GUILayout.Button("Clear Selection"))
+            HelpBox help = new HelpBox("Select a MeshFilter with a mesh. Shift-drag in the scene to box-select vertices.", HelpBoxMessageType.Info);
+            Label verticesLabel = new Label();
+            Label selectedLabel = new Label();
+            Button clear = new Button(() =>
             {
                 selection.Clear();
                 SceneView.RepaintAll();
-            }
+            })
+            {
+                text = "Clear Selection"
+            };
+
+            root.Add(InspectorHelp.Build(ToolName, "help.meshEdit"));
+            root.Add(meshField);
+            root.Add(handle);
+            root.Add(help);
+            root.Add(verticesLabel);
+            root.Add(selectedLabel);
+            root.Add(clear);
+
+            root.schedule.Execute(() =>
+            {
+                SyncMesh();
+                bool has = selector.HasMesh;
+                help.style.display = has ? DisplayStyle.None : DisplayStyle.Flex;
+                verticesLabel.style.display = has ? DisplayStyle.Flex : DisplayStyle.None;
+                selectedLabel.style.display = has ? DisplayStyle.Flex : DisplayStyle.None;
+                clear.style.display = has ? DisplayStyle.Flex : DisplayStyle.None;
+                verticesLabel.text = "Vertices: " + (vertices != null ? vertices.Length : 0);
+                selectedLabel.text = "Selected: " + selection.Count;
+            }).Every(200);
+
+            return root;
         }
 
         public void OnSceneGUI()
@@ -79,6 +111,21 @@ namespace WorldBuilder.Editor.MeshEditing
             }
 
             DrawSelectionMarkers(t);
+        }
+
+        private void SyncMesh()
+        {
+            if (selector.HasMesh)
+            {
+                if (selector.Mesh != activeMesh)
+                {
+                    LoadMesh(selector.Mesh);
+                }
+            }
+            else
+            {
+                Release();
+            }
         }
 
         private void DrawPerVertexHandles(Transform t)

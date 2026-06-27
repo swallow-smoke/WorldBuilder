@@ -1,6 +1,7 @@
-using System.IO;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 using WorldBuilder.Runtime.Data;
 
 namespace WorldBuilder.Editor.Export
@@ -18,7 +19,9 @@ namespace WorldBuilder.Editor.Export
             this.serializer = serializer;
         }
 
-        public string ToolName => "Export";
+        public string ToolName => WorldBuilderLocalization.Get("tool.export");
+
+        public Texture2D ToolIcon => null;
 
         public void OnEnable()
         {
@@ -28,19 +31,25 @@ namespace WorldBuilder.Editor.Export
         {
         }
 
-        public void OnInspectorGUI()
+        public VisualElement CreateInspectorGUI()
         {
-            chunkSize = EditorGUILayout.FloatField("Chunk Size", chunkSize);
+            VisualElement root = new VisualElement();
 
-            if (GUILayout.Button("Export World"))
-            {
-                Export();
-            }
+            root.Add(InspectorHelp.Build(ToolName, "help.export"));
+
+            FloatField size = new FloatField("Chunk Size") { value = chunkSize };
+            size.RegisterValueChangedCallback(evt => chunkSize = evt.newValue);
+            root.Add(size);
+
+            Button export = new Button(Export) { text = WorldBuilderLocalization.Get("btn.export") };
+            root.Add(export);
+
+            return root;
         }
 
         private void Export()
         {
-            string path = Path.Combine(Application.dataPath, "WorldBuilder/Export/world.bin");
+            string path = WorldBinPath.Full;
 
             try
             {

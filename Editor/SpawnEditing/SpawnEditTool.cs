@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 using WorldBuilder.Runtime.Data;
 
 namespace WorldBuilder.Editor.SpawnEditing
@@ -18,7 +20,9 @@ namespace WorldBuilder.Editor.SpawnEditing
             this.query = query;
         }
 
-        public string ToolName => "Spawn Editing";
+        public string ToolName => WorldBuilderLocalization.Get("tool.spawnEdit");
+
+        public Texture2D ToolIcon => null;
 
         public void OnEnable()
         {
@@ -29,16 +33,39 @@ namespace WorldBuilder.Editor.SpawnEditing
             return SceneRaycaster.TryRaycast(Event.current.mousePosition, out hit);
         }
 
-        public void OnInspectorGUI()
+        public VisualElement CreateInspectorGUI()
         {
-            spawnerPrefab = (GameObject)EditorGUILayout.ObjectField("Spawner Prefab", spawnerPrefab, typeof(GameObject), false);
-            removeMode = EditorGUILayout.Toggle("Remove Mode", removeMode);
-            removeThreshold = EditorGUILayout.Slider("Remove Threshold", removeThreshold, 0.1f, 10f);
+            VisualElement root = new VisualElement();
 
-            if (spawnerPrefab != null && spawnerPrefab.GetComponent<ISpawner>() == null)
+            root.Add(InspectorHelp.Build(ToolName, "help.spawnEdit"));
+
+            ObjectField prefab = new ObjectField("Spawner Prefab")
             {
-                EditorGUILayout.HelpBox("Prefab must contain a component implementing ISpawner.", MessageType.Warning);
-            }
+                objectType = typeof(GameObject),
+                allowSceneObjects = false,
+                value = spawnerPrefab
+            };
+            prefab.RegisterValueChangedCallback(evt => spawnerPrefab = evt.newValue as GameObject);
+            root.Add(prefab);
+
+            Toggle remove = new Toggle("Remove Mode") { value = removeMode };
+            remove.RegisterValueChangedCallback(evt => removeMode = evt.newValue);
+            root.Add(remove);
+
+            Slider threshold = new Slider("Remove Threshold", 0.1f, 10f) { value = removeThreshold };
+            threshold.RegisterValueChangedCallback(evt => removeThreshold = evt.newValue);
+            root.Add(threshold);
+
+            HelpBox help = new HelpBox("Prefab must contain a component implementing ISpawner.", HelpBoxMessageType.Warning);
+            root.Add(help);
+
+            root.schedule.Execute(() =>
+            {
+                bool warn = spawnerPrefab != null && spawnerPrefab.GetComponent<ISpawner>() == null;
+                help.style.display = warn ? DisplayStyle.Flex : DisplayStyle.None;
+            }).Every(200);
+
+            return root;
         }
 
         public void OnSceneGUI()
@@ -91,6 +118,7 @@ namespace WorldBuilder.Editor.SpawnEditing
             GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(spawnerPrefab);
             instance.transform.position = point;
             Undo.RegisterCreatedObjectUndo(instance, "Place Spawner");
+            UndoHistory.Push("Place Spawner");
         }
 
         private void RemoveNear(Vector3 point)
@@ -117,6 +145,7 @@ namespace WorldBuilder.Editor.SpawnEditing
             if (nearest is MonoBehaviour behaviour && behaviour != null)
             {
                 Undo.DestroyObjectImmediate(behaviour.gameObject);
+                UndoHistory.Push("Remove Spawner");
             }
         }
     }

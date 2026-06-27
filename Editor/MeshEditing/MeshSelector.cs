@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 namespace WorldBuilder.Editor.MeshEditing
@@ -13,9 +12,9 @@ namespace WorldBuilder.Editor.MeshEditing
 
         public bool HasMesh => target != null && target.sharedMesh != null;
 
-        public void DrawSelector()
+        public void SetTarget(MeshFilter value)
         {
-            target = (MeshFilter)EditorGUILayout.ObjectField("Mesh Filter", target, typeof(MeshFilter), true);
+            target = value;
         }
     }
 }

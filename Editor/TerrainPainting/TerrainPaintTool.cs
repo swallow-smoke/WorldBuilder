@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace WorldBuilder.Editor.TerrainPainting
 {
@@ -14,7 +16,9 @@ namespace WorldBuilder.Editor.TerrainPainting
         private readonly List<int> affected = new List<int>();
         private MeshRenderer target;
 
-        public string ToolName => "Terrain Painting";
+        public string ToolName => WorldBuilderLocalization.Get("tool.terrainPaint");
+
+        public Texture2D ToolIcon => null;
 
         public void OnEnable()
         {
@@ -31,20 +35,47 @@ namespace WorldBuilder.Editor.TerrainPainting
             if (mesh != null)
             {
                 Undo.RecordObject(mesh, label);
+                UndoHistory.Push(label);
             }
         }
 
-        public void OnInspectorGUI()
+        public VisualElement CreateInspectorGUI()
         {
-            target = (MeshRenderer)EditorGUILayout.ObjectField("Mesh Renderer", target, typeof(MeshRenderer), true);
-            brushRadius = EditorGUILayout.Slider("Brush Radius", brushRadius, 0.1f, 50f);
-            brushStrength = EditorGUILayout.Slider("Brush Strength", brushStrength, 0f, 1f);
-            paintColor = EditorGUILayout.ColorField("Paint Color", paintColor);
+            VisualElement root = new VisualElement();
 
-            if (target != null && GetMesh() == null)
+            root.Add(InspectorHelp.Build(ToolName, "help.terrainPaint"));
+
+            ObjectField targetField = new ObjectField("Mesh Renderer")
             {
-                EditorGUILayout.HelpBox("Target needs a MeshFilter with a mesh.", MessageType.Warning);
-            }
+                objectType = typeof(MeshRenderer),
+                allowSceneObjects = true,
+                value = target
+            };
+            targetField.RegisterValueChangedCallback(evt => target = evt.newValue as MeshRenderer);
+            root.Add(targetField);
+
+            Slider radius = new Slider("Brush Radius", 0.1f, 50f) { value = brushRadius };
+            radius.RegisterValueChangedCallback(evt => brushRadius = evt.newValue);
+            root.Add(radius);
+
+            Slider strength = new Slider("Brush Strength", 0f, 1f) { value = brushStrength };
+            strength.RegisterValueChangedCallback(evt => brushStrength = evt.newValue);
+            root.Add(strength);
+
+            ColorField color = new ColorField("Paint Color") { value = paintColor };
+            color.RegisterValueChangedCallback(evt => paintColor = evt.newValue);
+            root.Add(color);
+
+            HelpBox help = new HelpBox("Target needs a MeshFilter with a mesh.", HelpBoxMessageType.Warning);
+            root.Add(help);
+
+            root.schedule.Execute(() =>
+            {
+                bool warn = target != null && GetMesh() == null;
+                help.style.display = warn ? DisplayStyle.Flex : DisplayStyle.None;
+            }).Every(200);
+
+            return root;
         }
 
         public void OnSceneGUI()
