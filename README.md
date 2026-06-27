@@ -48,13 +48,9 @@ WorldBuilder는 Unity에서 대규모 월드를 효율적으로 제작하기 위
 
 ## 설치
 
-저장소를 클론합니다.
+다음 문서를 참조하시기 바랍니다.
+- [Install](Installation.md)
 
-```bash
-git clone https://github.com/swallow-smoke/WorldBuilder.git
-```
-
-이후 Unity에서 프로젝트를 열면 사용할 수 있습니다.
 
 ## 문서
 
@@ -123,13 +119,8 @@ WorldBuilder is a Unity Editor extension that provides a collection of tools for
 
 ## Installation
 
-Clone the repository.
-
-```bash
-git clone https://github.com/swallow-smoke/WorldBuilder.git
-```
-
-Open the project with Unity.
+Read this docs
+- [Install](Installation.md)
 
 ## Documentation
 
