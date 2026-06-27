@@ -49,7 +49,7 @@ WorldBuilder는 Unity에서 대규모 월드를 효율적으로 제작하기 위
 ## 설치
 
 다음 문서를 참조하시기 바랍니다.
-- [Install](Installation.md)
+- Installation.md
 
 
 ## 문서
@@ -120,7 +120,7 @@ WorldBuilder is a Unity Editor extension that provides a collection of tools for
 ## Installation
 
 Read this docs
-- [Install](Installation.md)
+- Installation.md
 
 ## Documentation
 
