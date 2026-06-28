@@ -46,6 +46,21 @@ WorldBuilder는 Unity에서 대규모 월드를 효율적으로 제작하기 위
 * Export Tool
 * Undo History
 
+### 확장 도구 (생산성 / 시각화 / 자동화)
+
+> 자세한 내용은 `Documentation/KR/BuiltInTools.md` 참조 (총 30종)
+
+* 생산성: Scene Bookmark, Layer Batch, Scene Search, Prefab Batch
+* 디버그/시각화: Draw Call Heatmap, Collider Visualizer, Light Range, UV Visualizer, Audio Visualizer
+* 자동화: Scene Snapshot, Placement Rule, Mesh Optimizer
+* 임포트: FBX Import, Texture Import, Texture Atlas
+* 렌더링/셰이더: Shader Live Edit, Material Compare
+* 오디오: Audio Mixer Preset
+* 빌드/배포: Unused Asset, Asset Report
+* 협업: Scene Changes, Object Owner
+* 물리: Rigidbody Batch, Collider Fitter
+* LOD/Transform: LOD Generator, Lighting Preset, Static Flag, Object Snap, Transform Batch, Terrain Sculpt
+
 ## 설치
 
 다음 문서를 참조하시기 바랍니다.
@@ -59,7 +74,7 @@ WorldBuilder는 Unity에서 대규모 월드를 효율적으로 제작하기 위
 * 시작하기
 * 설치 방법
 * 아키텍처
-* Tool Reference
+* Tool Reference (BuiltInTools.md — 확장 도구 포함)
 * API Reference
 
 ## 로드맵
@@ -117,6 +132,21 @@ WorldBuilder is a Unity Editor extension that provides a collection of tools for
 * Export Tools
 * Undo History
 
+### Extension Tools (Productivity / Visualization / Automation)
+
+> See `Documentation/KR/BuiltInTools.md` for details (30 tools)
+
+* Productivity: Scene Bookmark, Layer Batch, Scene Search, Prefab Batch
+* Debug/Visualization: Draw Call Heatmap, Collider Visualizer, Light Range, UV Visualizer, Audio Visualizer
+* Automation: Scene Snapshot, Placement Rule, Mesh Optimizer
+* Import: FBX Import, Texture Import, Texture Atlas
+* Rendering/Shader: Shader Live Edit, Material Compare
+* Audio: Audio Mixer Preset
+* Build/Deploy: Unused Asset, Asset Report
+* Collaboration: Scene Changes, Object Owner
+* Physics: Rigidbody Batch, Collider Fitter
+* LOD/Transform: LOD Generator, Lighting Preset, Static Flag, Object Snap, Transform Batch, Terrain Sculpt
+
 ## Installation
 
 Read this docs
@@ -129,7 +159,7 @@ Detailed documentation is available in the `Documentation/` directory.
 * Getting Started
 * Installation
 * Architecture
-* Tool Reference
+* Tool Reference (BuiltInTools.md — includes extension tools)
 * API Reference
 
 ## Roadmap

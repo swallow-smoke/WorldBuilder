@@ -70,6 +70,38 @@ namespace WorldBuilder.Editor
             WorldBuilderToolRegistry.Register(new DepthLayerVisualizer.DepthLayerVisualizerTool());
             WorldBuilderToolRegistry.Register(new EnvironmentOverlayTool.EnvironmentOverlayTool(zoneProviders));
             WorldBuilderToolRegistry.Register(new MaterialBatchTool.MaterialBatchTool(biomeMap));
+
+            WorldBuilderToolRegistry.Register(new SceneBookmarkTool.SceneBookmarkTool());
+            WorldBuilderToolRegistry.Register(new LayerBatchTool.LayerBatchTool());
+            WorldBuilderToolRegistry.Register(new SceneSearchTool.SceneSearchTool());
+            WorldBuilderToolRegistry.Register(new PrefabBatchTool.PrefabBatchTool());
+            WorldBuilderToolRegistry.Register(new DrawCallHeatmapTool.DrawCallHeatmapTool());
+            WorldBuilderToolRegistry.Register(new ColliderVisualizerTool.ColliderVisualizerTool());
+            WorldBuilderToolRegistry.Register(new LightRangeVisualizerTool.LightRangeVisualizerTool());
+            WorldBuilderToolRegistry.Register(new SceneSnapshotTool.SceneSnapshotTool());
+            WorldBuilderToolRegistry.Register(new PlacementRuleTool.PlacementRuleTool());
+            WorldBuilderToolRegistry.Register(new MeshOptimizerTool.MeshOptimizerTool());
+            WorldBuilderToolRegistry.Register(new FBXImportTool.FBXImportTool());
+            WorldBuilderToolRegistry.Register(new TextureImportTool.TextureImportTool());
+
+            WorldBuilderToolRegistry.Register(new ShaderLiveEditTool.ShaderLiveEditTool());
+            WorldBuilderToolRegistry.Register(new MaterialCompareTool.MaterialCompareTool());
+            WorldBuilderToolRegistry.Register(new TextureAtlasTool.TextureAtlasTool());
+            WorldBuilderToolRegistry.Register(new UVVisualizerTool.UVVisualizerTool());
+            WorldBuilderToolRegistry.Register(new AudioVisualizerTool.AudioVisualizerTool());
+            WorldBuilderToolRegistry.Register(new AudioMixerPresetTool.AudioMixerPresetTool());
+            WorldBuilderToolRegistry.Register(new UnusedAssetTool.UnusedAssetTool());
+            WorldBuilderToolRegistry.Register(new AssetReportTool.AssetReportTool());
+            WorldBuilderToolRegistry.Register(new SceneChangeTool.SceneChangeTool());
+            WorldBuilderToolRegistry.Register(new ObjectOwnerTool.ObjectOwnerTool());
+            WorldBuilderToolRegistry.Register(new RigidbodyBatchTool.RigidbodyBatchTool());
+            WorldBuilderToolRegistry.Register(new ColliderFitterTool.ColliderFitterTool());
+            WorldBuilderToolRegistry.Register(new LODGeneratorTool.LODGeneratorTool());
+            WorldBuilderToolRegistry.Register(new LightingPresetTool.LightingPresetTool());
+            WorldBuilderToolRegistry.Register(new StaticFlagTool.StaticFlagTool());
+            WorldBuilderToolRegistry.Register(new ObjectSnapTool.ObjectSnapTool());
+            WorldBuilderToolRegistry.Register(new TransformBatchTool.TransformBatchTool());
+            WorldBuilderToolRegistry.Register(new TerrainSculptTool.TerrainSculptTool(voxelStore));
         }
     }
 }
