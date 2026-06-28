@@ -17,6 +17,7 @@ namespace WorldBuilder.Editor.TransformBatchTool
         [SerializeField] private bool resetScale = true;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.transformBatch");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

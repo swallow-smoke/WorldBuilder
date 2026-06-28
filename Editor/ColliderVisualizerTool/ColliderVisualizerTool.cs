@@ -15,6 +15,7 @@ namespace WorldBuilder.Editor.ColliderVisualizerTool
         [SerializeField] private float opacity = 0.8f;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.colliderVisualizer");
+        public string Category => WorldBuilderCategory.Debug;
 
         public Texture2D ToolIcon => null;
 

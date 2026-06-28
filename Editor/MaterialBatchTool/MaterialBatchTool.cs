@@ -43,6 +43,7 @@ namespace WorldBuilder.Editor.MaterialBatchTool
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.materialBatch");
+        public string Category => WorldBuilderCategory.Rendering;
 
         public Texture2D ToolIcon => null;
 

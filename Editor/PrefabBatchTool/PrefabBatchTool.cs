@@ -8,6 +8,7 @@ namespace WorldBuilder.Editor.PrefabBatchTool
         [SerializeField] private bool sceneWide = true;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.prefabBatch");
+        public string Category => WorldBuilderCategory.Productivity;
 
         public Texture2D ToolIcon => null;
 

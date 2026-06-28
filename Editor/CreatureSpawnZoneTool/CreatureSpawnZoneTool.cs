@@ -18,6 +18,7 @@ namespace WorldBuilder.Editor.CreatureSpawnZoneTool
         private readonly Dictionary<BiomeType, Color> colorLookup = new Dictionary<BiomeType, Color>();
 
         public string ToolName => WorldBuilderLocalization.Get("tool.creatureSpawn");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

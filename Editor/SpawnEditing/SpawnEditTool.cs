@@ -21,6 +21,7 @@ namespace WorldBuilder.Editor.SpawnEditing
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.spawnEdit");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

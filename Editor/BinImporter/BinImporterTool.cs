@@ -28,6 +28,7 @@ namespace WorldBuilder.Editor.BinImporter
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.binImport");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

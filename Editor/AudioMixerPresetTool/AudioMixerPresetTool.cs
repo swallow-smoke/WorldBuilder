@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.AudioMixerPresetTool
         private Label statusLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.audioMixerPreset");
+        public string Category => WorldBuilderCategory.Audio;
 
         public Texture2D ToolIcon => null;
 

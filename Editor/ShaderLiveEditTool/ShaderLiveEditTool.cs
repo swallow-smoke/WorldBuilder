@@ -18,6 +18,7 @@ namespace WorldBuilder.Editor.ShaderLiveEditTool
         private VisualElement propertyContainer;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.shaderLiveEdit");
+        public string Category => WorldBuilderCategory.Rendering;
 
         public Texture2D ToolIcon => null;
 

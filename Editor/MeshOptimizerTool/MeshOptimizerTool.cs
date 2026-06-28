@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.MeshOptimizerTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.meshOptimizer");
+        public string Category => WorldBuilderCategory.Automation;
 
         public Texture2D ToolIcon => null;
 

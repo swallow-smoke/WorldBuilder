@@ -27,6 +27,7 @@ namespace WorldBuilder.Editor.EnvironmentOverlayTool
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.envOverlay");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

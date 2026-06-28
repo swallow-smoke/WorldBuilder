@@ -20,6 +20,7 @@ namespace WorldBuilder.Editor.Export
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.export");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

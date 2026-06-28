@@ -15,6 +15,7 @@ namespace WorldBuilder.Editor.LayerBatchTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.layerBatch");
+        public string Category => WorldBuilderCategory.Productivity;
 
         public Texture2D ToolIcon => null;
 

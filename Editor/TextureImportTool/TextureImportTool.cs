@@ -36,6 +36,7 @@ namespace WorldBuilder.Editor.TextureImportTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.textureImport");
+        public string Category => WorldBuilderCategory.Import;
 
         public Texture2D ToolIcon => null;
 

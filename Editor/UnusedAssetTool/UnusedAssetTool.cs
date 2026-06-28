@@ -15,6 +15,7 @@ namespace WorldBuilder.Editor.UnusedAssetTool
         private Label statusLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.unusedAsset");
+        public string Category => WorldBuilderCategory.Build;
 
         public Texture2D ToolIcon => null;
 

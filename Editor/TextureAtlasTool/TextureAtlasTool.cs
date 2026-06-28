@@ -24,6 +24,7 @@ namespace WorldBuilder.Editor.TextureAtlasTool
         private readonly List<string> rectStrings = new List<string>();
 
         public string ToolName => WorldBuilderLocalization.Get("tool.textureAtlas");
+        public string Category => WorldBuilderCategory.Rendering;
 
         public Texture2D ToolIcon => null;
 

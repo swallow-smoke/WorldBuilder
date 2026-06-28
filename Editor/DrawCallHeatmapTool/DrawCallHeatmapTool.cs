@@ -13,6 +13,7 @@ namespace WorldBuilder.Editor.DrawCallHeatmapTool
         private readonly List<Renderer> renderers = new List<Renderer>();
 
         public string ToolName => WorldBuilderLocalization.Get("tool.drawCallHeatmap");
+        public string Category => WorldBuilderCategory.Debug;
 
         public Texture2D ToolIcon => null;
 

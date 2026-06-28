@@ -40,6 +40,7 @@ namespace WorldBuilder.Editor.SceneSnapshotTool
         private ListView listView;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.sceneSnapshot");
+        public string Category => WorldBuilderCategory.Automation;
 
         public Texture2D ToolIcon => null;
 

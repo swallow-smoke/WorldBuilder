@@ -36,6 +36,7 @@ namespace WorldBuilder.Editor.FBXImportTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.fbxImport");
+        public string Category => WorldBuilderCategory.Import;
 
         public Texture2D ToolIcon => null;
 

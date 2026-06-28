@@ -15,6 +15,7 @@ namespace WorldBuilder.Editor.PathTool
         private MeshFilter target;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.path");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

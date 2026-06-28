@@ -10,16 +10,12 @@ namespace WorldBuilder.Editor
         private const string UIPath = "Packages/com.emiteat.worldbuilder/Editor/UI/";
 
         private WorldBuilderUIController controller;
-        private VisualTreeAsset itemAsset;
 
         private Label titleLabel;
         private Label statusLabel;
         private Button languageToggle;
         private ScrollView toolList;
         private VisualElement inspectorContainer;
-
-        private IWorldBuilderTool selectedTool;
-        private Button selectedButton;
 
         [MenuItem("WorldBuilder/Open")]
         public static void Open()
@@ -32,11 +28,9 @@ namespace WorldBuilder.Editor
 
         public void CreateGUI()
         {
-            controller = new WorldBuilderUIController();
-
             VisualTreeAsset tree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UIPath + "WorldBuilderWindow.uxml");
             StyleSheet style = AssetDatabase.LoadAssetAtPath<StyleSheet>(UIPath + "WorldBuilderWindow.uss");
-            itemAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UIPath + "ToolListItem.uxml");
+            VisualTreeAsset itemAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(UIPath + "ToolListItem.uxml");
 
             tree.CloneTree(rootVisualElement);
             rootVisualElement.styleSheets.Add(style);
@@ -46,6 +40,9 @@ namespace WorldBuilder.Editor
             languageToggle = rootVisualElement.Q<Button>("language-toggle");
             toolList = rootVisualElement.Q<ScrollView>("tool-list");
             inspectorContainer = rootVisualElement.Q<VisualElement>("inspector-container");
+
+            controller = new WorldBuilderUIController(itemAsset);
+            controller.ToolSelected += OnToolSelected;
 
             languageToggle.clicked += OnLanguageToggleClicked;
 
@@ -67,9 +64,10 @@ namespace WorldBuilder.Editor
 
         private void OnSceneGui(SceneView sceneView)
         {
-            if (selectedTool != null)
+            IWorldBuilderTool tool = controller?.SelectedTool;
+            if (tool != null)
             {
-                selectedTool.OnSceneGUI();
+                tool.OnSceneGUI();
             }
         }
 
@@ -87,17 +85,18 @@ namespace WorldBuilder.Editor
             titleLabel.text = WorldBuilderLocalization.Get("header.title");
             languageToggle.text = WorldBuilderLocalization.Current == WorldBuilderLocalization.Language.Korean ? "KO" : "EN";
 
-            BuildToolList();
+            controller.BuildToolList(toolList, inspectorContainer);
 
+            IWorldBuilderTool toSelect = controller.SelectedTool;
             IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
-            if (selectedTool == null && tools.Count > 0)
+            if (toSelect == null && tools.Count > 0)
             {
-                selectedTool = tools[0];
+                toSelect = tools[0];
             }
 
-            if (selectedTool != null)
+            if (toSelect != null)
             {
-                SelectTool(selectedTool);
+                controller.OnToolSelected(toSelect, inspectorContainer);
             }
             else
             {
@@ -105,60 +104,9 @@ namespace WorldBuilder.Editor
             }
         }
 
-        private void BuildToolList()
+        private void OnToolSelected(IWorldBuilderTool tool)
         {
-            toolList.Clear();
-            selectedButton = null;
-
-            IReadOnlyList<IWorldBuilderTool> tools = WorldBuilderToolRegistry.GetAll();
-            for (int i = 0; i < tools.Count; i++)
-            {
-                IWorldBuilderTool tool = tools[i];
-                VisualElement item = itemAsset.Instantiate();
-                Button button = item.Q<Button>("tool-button");
-                Image icon = item.Q<Image>("tool-icon");
-                Label label = item.Q<Label>("tool-name");
-
-                icon.image = tool.ToolIcon;
-                label.text = tool.ToolName;
-                button.userData = tool;
-                button.clicked += () => SelectTool(tool);
-
-                toolList.Add(item);
-            }
-        }
-
-        private void SelectTool(IWorldBuilderTool tool)
-        {
-            selectedTool = tool;
-            controller.OnToolSelected(tool, inspectorContainer);
-
-            if (selectedButton != null)
-            {
-                selectedButton.RemoveFromClassList("selected");
-            }
-
-            selectedButton = FindButton(tool);
-            if (selectedButton != null)
-            {
-                selectedButton.AddToClassList("selected");
-            }
-
-            statusLabel.text = tool.ToolName;
-        }
-
-        private Button FindButton(IWorldBuilderTool tool)
-        {
-            List<Button> buttons = toolList.Query<Button>("tool-button").ToList();
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                if (buttons[i].userData == tool)
-                {
-                    return buttons[i];
-                }
-            }
-
-            return null;
+            statusLabel.text = tool != null ? tool.ToolName : WorldBuilderLocalization.Get("status.ready");
         }
 
         private void OnLanguageToggleClicked()
@@ -169,7 +117,8 @@ namespace WorldBuilder.Editor
 
         private void UpdateStatus()
         {
-            if (selectedTool == null)
+            IWorldBuilderTool tool = controller.SelectedTool;
+            if (tool == null)
             {
                 statusLabel.text = WorldBuilderLocalization.Get("status.ready");
                 return;
@@ -178,11 +127,11 @@ namespace WorldBuilder.Editor
             IReadOnlyList<string> history = UndoHistory.Entries;
             if (history.Count > 0)
             {
-                statusLabel.text = selectedTool.ToolName + "  |  " + history[history.Count - 1];
+                statusLabel.text = tool.ToolName + "  |  " + history[history.Count - 1];
             }
             else
             {
-                statusLabel.text = selectedTool.ToolName;
+                statusLabel.text = tool.ToolName;
             }
         }
     }

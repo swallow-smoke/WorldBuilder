@@ -46,6 +46,7 @@ namespace WorldBuilder.Editor.SceneChangeTool
         private ListView listView;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.sceneChange");
+        public string Category => WorldBuilderCategory.Collaboration;
 
         public Texture2D ToolIcon => null;
 

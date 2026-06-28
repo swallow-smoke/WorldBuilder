@@ -52,13 +52,44 @@
     padding-bottom: 8px;
 }
 
+.category-header {
+    background-color: #2D2D30;
+    -unity-font-style: bold;
+    padding: 6px 12px;
+    border-bottom-width: 1px;
+    border-bottom-color: #3E3E42;
+    color: #D4D4D4;
+}
+
+.category-foldout {
+    margin: 0;
+    padding: 0;
+}
+
+.category-foldout > .unity-foldout__toggle {
+    background-color: #2D2D30;
+    padding: 6px 12px;
+    margin: 0;
+}
+
+.category-foldout > .unity-foldout__toggle:hover {
+    background-color: #37373D;
+}
+
+.category-foldout > .unity-foldout__content {
+    margin: 0;
+    padding: 0;
+}
+
 .tool-button {
-    height: 40px;
+    height: 36px;
     width: 100%;
-    padding-left: 12px;
+    padding-left: 24px;
     border-left-width: 3px;
     border-left-color: transparent;
-    background-color: #252526;
+    background-color: transparent;
+    color: #D4D4D4;
+    -unity-text-align: middle-left;
     transition: background-color 0.1s ease;
 }
 

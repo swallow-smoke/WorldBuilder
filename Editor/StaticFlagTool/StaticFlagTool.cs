@@ -15,6 +15,7 @@ namespace WorldBuilder.Editor.StaticFlagTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.staticFlag");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

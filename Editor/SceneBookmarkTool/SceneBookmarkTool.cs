@@ -30,6 +30,7 @@ namespace WorldBuilder.Editor.SceneBookmarkTool
         private ListView listView;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.sceneBookmark");
+        public string Category => WorldBuilderCategory.Productivity;
 
         public Texture2D ToolIcon => null;
 

@@ -12,6 +12,7 @@ namespace WorldBuilder.Editor.WreckageTool
         [SerializeField] private int logNumber;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.wreckage");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

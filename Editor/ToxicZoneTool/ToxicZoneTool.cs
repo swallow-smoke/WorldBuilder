@@ -17,6 +17,7 @@ namespace WorldBuilder.Editor.ToxicZoneTool
         private readonly List<Vector3> positions = new List<Vector3>();
 
         public string ToolName => WorldBuilderLocalization.Get("tool.toxicZone");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

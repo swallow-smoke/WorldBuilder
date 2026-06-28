@@ -25,6 +25,7 @@ namespace WorldBuilder.Editor.SceneSearchTool
         private Label countLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.sceneSearch");
+        public string Category => WorldBuilderCategory.Productivity;
 
         public Texture2D ToolIcon => null;
 

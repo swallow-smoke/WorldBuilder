@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.RigidbodyBatchTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.rigidbodyBatch");
+        public string Category => WorldBuilderCategory.Physics;
 
         public Texture2D ToolIcon => null;
 

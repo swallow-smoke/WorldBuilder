@@ -13,6 +13,7 @@ namespace WorldBuilder.Editor.AudioVisualizerTool
         [SerializeField] private float opacity = 0.4f;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.audioVisualizer");
+        public string Category => WorldBuilderCategory.Audio;
 
         public Texture2D ToolIcon => null;
 

@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.MaterialCompareTool
         private ListView listView;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.materialCompare");
+        public string Category => WorldBuilderCategory.Rendering;
 
         public Texture2D ToolIcon => null;
 

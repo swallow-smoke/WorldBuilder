@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.LightingPresetTool
         private ListView listView;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.lightingPreset");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

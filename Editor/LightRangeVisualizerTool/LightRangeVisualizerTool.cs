@@ -14,6 +14,7 @@ namespace WorldBuilder.Editor.LightRangeVisualizerTool
         [SerializeField] private float opacity = 0.8f;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.lightRange");
+        public string Category => WorldBuilderCategory.Debug;
 
         public Texture2D ToolIcon => null;
 

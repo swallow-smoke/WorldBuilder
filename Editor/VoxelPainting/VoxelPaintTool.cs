@@ -27,6 +27,7 @@ namespace WorldBuilder.Editor.VoxelPainting
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.voxelPaint");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

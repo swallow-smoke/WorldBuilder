@@ -28,6 +28,7 @@ namespace WorldBuilder.Editor.TerrainSculptTool
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.terrainSculpt");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

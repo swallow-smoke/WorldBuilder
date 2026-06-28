@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.TemperatureZoneTool
         private readonly List<Vector3> positions = new List<Vector3>();
 
         public string ToolName => WorldBuilderLocalization.Get("tool.temperatureZone");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

@@ -28,6 +28,7 @@ namespace WorldBuilder.Editor.PrefabBrush
         }
 
         public string ToolName => "Prefab Brush Pro++";
+        public string Category => WorldBuilderCategory.World;
         public Texture2D ToolIcon => null;
 
         public void OnEnable()

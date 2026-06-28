@@ -23,6 +23,7 @@ namespace WorldBuilder.Editor.ObjectSnapTool
         private VisualElement surfaceSection;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.objectSnap");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

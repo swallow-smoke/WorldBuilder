@@ -19,6 +19,7 @@ namespace WorldBuilder.Editor.SpawnHeatmap
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.heatmap");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

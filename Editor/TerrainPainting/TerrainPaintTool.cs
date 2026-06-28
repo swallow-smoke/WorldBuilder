@@ -17,6 +17,7 @@ namespace WorldBuilder.Editor.TerrainPainting
         private MeshRenderer target;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.terrainPaint");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

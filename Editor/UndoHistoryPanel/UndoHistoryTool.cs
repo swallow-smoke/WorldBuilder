@@ -8,6 +8,7 @@ namespace WorldBuilder.Editor.UndoHistoryPanel
     public sealed class UndoHistoryTool : IWorldBuilderTool
     {
         public string ToolName => WorldBuilderLocalization.Get("tool.undoHistory");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

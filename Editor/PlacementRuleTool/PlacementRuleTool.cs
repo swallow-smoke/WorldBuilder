@@ -25,6 +25,7 @@ namespace WorldBuilder.Editor.PlacementRuleTool
         private Label resultLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.placementRule");
+        public string Category => WorldBuilderCategory.Automation;
 
         public Texture2D ToolIcon => null;
 

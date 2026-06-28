@@ -13,6 +13,7 @@ namespace WorldBuilder.Editor.BioluminescenceTool
         [SerializeField] private Color color = Color.cyan;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.bioluminescence");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

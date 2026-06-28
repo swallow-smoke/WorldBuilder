@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.WaterCurrentTool
         private Vector3 dragCurrent;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.waterCurrent");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

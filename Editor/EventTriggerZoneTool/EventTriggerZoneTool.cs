@@ -13,6 +13,7 @@ namespace WorldBuilder.Editor.EventTriggerZoneTool
         [SerializeField] private bool oneShot = true;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.eventTrigger");
+        public string Category => WorldBuilderCategory.AstraNope;
 
         public Texture2D ToolIcon => null;
 

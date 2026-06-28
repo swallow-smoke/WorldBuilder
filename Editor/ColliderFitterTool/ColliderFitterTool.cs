@@ -14,6 +14,7 @@ namespace WorldBuilder.Editor.ColliderFitterTool
         private GameObject target;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.colliderFitter");
+        public string Category => WorldBuilderCategory.Physics;
 
         public Texture2D ToolIcon => null;
 

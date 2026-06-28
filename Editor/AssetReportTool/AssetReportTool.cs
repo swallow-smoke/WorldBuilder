@@ -21,6 +21,7 @@ namespace WorldBuilder.Editor.AssetReportTool
         private Label statusLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.assetReport");
+        public string Category => WorldBuilderCategory.Build;
 
         public Texture2D ToolIcon => null;
 

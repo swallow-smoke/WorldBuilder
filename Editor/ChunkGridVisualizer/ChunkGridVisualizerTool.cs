@@ -19,6 +19,7 @@ namespace WorldBuilder.Editor.ChunkGridVisualizer
         }
 
         public string ToolName => WorldBuilderLocalization.Get("tool.chunkGrid");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

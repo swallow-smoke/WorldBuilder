@@ -18,6 +18,7 @@ namespace WorldBuilder.Editor.LODGeneratorTool
         private Label statusLabel;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.lodGenerator");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

@@ -19,6 +19,7 @@ namespace WorldBuilder.Editor.MeshEditing
         private Vector2 boxEnd;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.meshEdit");
+        public string Category => WorldBuilderCategory.World;
 
         public Texture2D ToolIcon => null;
 

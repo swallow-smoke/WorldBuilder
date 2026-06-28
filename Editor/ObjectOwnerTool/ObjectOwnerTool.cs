@@ -16,6 +16,7 @@ namespace WorldBuilder.Editor.ObjectOwnerTool
         private ListView listView;
 
         public string ToolName => WorldBuilderLocalization.Get("tool.objectOwner");
+        public string Category => WorldBuilderCategory.Collaboration;
 
         public Texture2D ToolIcon => null;
 
