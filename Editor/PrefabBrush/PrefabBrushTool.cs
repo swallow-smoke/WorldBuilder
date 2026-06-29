@@ -6,6 +6,9 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.PrefabBrush.EnvironmentBrush.Coral;
+using WorldBuilder.Editor.PrefabBrush.EnvironmentBrush.Rock;
+using WorldBuilder.Editor.PrefabBrush.EnvironmentBrush.Vegetation;
 
 namespace WorldBuilder.Editor.PrefabBrush
 {
@@ -21,6 +24,7 @@ namespace WorldBuilder.Editor.PrefabBrush
         private SpatialHash<GameObject> spatialHash;
         private Material previewMaterial;
         private MaterialPropertyBlock previewBlock;
+        private List<IEnvironmentBrush> environmentBrushes;
 
         public PrefabBrushTool(IBiomeMap biomeMap)
         {
@@ -54,6 +58,7 @@ namespace WorldBuilder.Editor.PrefabBrush
             root.Add(BuildBrushSection());
             root.Add(BuildPlacementSection());
             root.Add(BuildPrefabSection());
+            root.Add(BuildEnvironmentSection());
             root.Add(BuildMaskSection());
             root.Add(BuildModifierGraphSection());
             root.Add(BuildStrokeSection());
@@ -123,6 +128,16 @@ namespace WorldBuilder.Editor.PrefabBrush
             if (spatialHash == null)
             {
                 RebuildSpatialHash();
+            }
+
+            if (environmentBrushes == null)
+            {
+                environmentBrushes = new List<IEnvironmentBrush>
+                {
+                    new VegetationBrush(),
+                    new CoralBrush(),
+                    new RockBrush()
+                };
             }
         }
 
@@ -641,6 +656,11 @@ namespace WorldBuilder.Editor.PrefabBrush
                 list.Clear();
                 for (int i = 0; i < settings.prefabEntries.Count; i++)
                 {
+                    if (settings.prefabEntries[i].envType != EnvironmentType.None)
+                    {
+                        continue;
+                    }
+
                     int index = i;
 
                     VisualElement row = new VisualElement();
@@ -697,6 +717,28 @@ namespace WorldBuilder.Editor.PrefabBrush
 
             section.Add(add);
             Rebuild();
+            return section;
+        }
+
+        private VisualElement BuildEnvironmentSection()
+        {
+            Foldout section = new Foldout { text = "Environment Brush", value = false };
+            Toggle sectionToggle = section.Q<Toggle>();
+            if (sectionToggle != null)
+            {
+                sectionToggle.style.unityFontStyleAndWeight = FontStyle.Bold;
+                sectionToggle.style.fontSize = 13f;
+            }
+
+            for (int i = 0; i < environmentBrushes.Count; i++)
+            {
+                IEnvironmentBrush brush = environmentBrushes[i];
+                Foldout foldout = new Foldout { text = brush.DisplayName, value = false };
+                foldout.Add(brush.BuildUI());
+                EnvironmentUI.StyleBrushFoldout(foldout);
+                section.Add(foldout);
+            }
+
             return section;
         }
 

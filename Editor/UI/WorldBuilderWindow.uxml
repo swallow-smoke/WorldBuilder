@@ -7,7 +7,7 @@
         </ui:VisualElement>
         <ui:TwoPaneSplitView name="split" fixed-pane-index="0" fixed-pane-initial-dimension="200" orientation="Horizontal" class="split">
             <ui:ScrollView name="tool-list" class="tool-list" />
-            <ui:VisualElement name="inspector-container" class="inspector-container" />
+            <ui:ScrollView name="inspector-container" class="inspector-container" mode="Vertical" />
         </ui:TwoPaneSplitView>
         <ui:VisualElement name="status-bar" class="status-bar">
             <ui:Label name="status-label" class="status-label" />

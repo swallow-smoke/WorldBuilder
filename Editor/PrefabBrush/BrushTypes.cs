@@ -9,6 +9,7 @@ namespace WorldBuilder.Editor.PrefabBrush
     {
         public GameObject prefab;
         public float weight;
+        public EnvironmentType envType;
     }
 
     [Serializable]
