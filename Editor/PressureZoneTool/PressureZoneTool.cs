@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.PressureZoneTool
@@ -81,6 +82,9 @@ namespace WorldBuilder.Editor.PressureZoneTool
 
         private void Place(Vector3 point)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Pressure Zone");
+
             GameObject go = new GameObject("PressureZone");
             go.transform.position = point;
 
@@ -90,6 +94,14 @@ namespace WorldBuilder.Editor.PressureZoneTool
             zone.DamagePerSecond = damagePerSecond;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Pressure Zone");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new PressureZoneEntry(point, radius, pressure, damagePerSecond, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Pressure Zone");
         }
 

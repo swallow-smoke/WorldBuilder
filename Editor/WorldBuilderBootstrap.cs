@@ -12,6 +12,8 @@ using WorldBuilder.Editor.SpawnHeatmap;
 using WorldBuilder.Editor.TerrainPainting;
 using WorldBuilder.Editor.UndoHistoryPanel;
 using WorldBuilder.Editor.VoxelPainting;
+using WorldBuilder.Editor.WorldDataBrowserTool;
+using WorldBuilder.Editor.WorldStatisticsTool;
 
 namespace WorldBuilder.Editor
 {
@@ -28,6 +30,9 @@ namespace WorldBuilder.Editor
             IChunkSerializeStrategy serializeStrategy = new BinaryChunkSerializeStrategy();
             ChunkSerializer serializer = new ChunkSerializer(serializeStrategy);
             SceneDataCollector collector = new SceneDataCollector(biomeMap, spawnerQuery, voxelStore);
+
+            WorldBuilderToolRegistry.Register(new WorldDataBrowserTool.WorldDataBrowserTool());
+            WorldBuilderToolRegistry.Register(new WorldStatisticsTool.WorldStatisticsTool());
 
             WorldBuilderToolRegistry.Register(new MeshEditTool());
             WorldBuilderToolRegistry.Register(new PrefabBrushTool(prefabBrushBiomeMap));

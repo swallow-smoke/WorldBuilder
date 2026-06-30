@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Data;
 
 namespace WorldBuilder.Editor.SpawnEditing
@@ -116,9 +117,22 @@ namespace WorldBuilder.Editor.SpawnEditing
                 return;
             }
 
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Spawner");
+
             GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(spawnerPrefab);
             instance.transform.position = point;
             Undo.RegisterCreatedObjectUndo(instance, "Place Spawner");
+
+            if (store != null)
+            {
+                ISpawner spawner = instance.GetComponent<ISpawner>();
+                int prefabId = spawner != null ? spawner.PrefabId : 0;
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(instance).ToString();
+                store.Add(new SpawnPointEntry(point, prefabId, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Spawner");
         }
 

@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.EventTriggerZoneTool
@@ -82,6 +83,9 @@ namespace WorldBuilder.Editor.EventTriggerZoneTool
 
         private void Place(Vector3 point)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Event Trigger Zone");
+
             GameObject go = new GameObject("EventTriggerZone");
             go.transform.position = point;
 
@@ -91,6 +95,14 @@ namespace WorldBuilder.Editor.EventTriggerZoneTool
             zone.OneShot = oneShot;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Event Trigger Zone");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new EventTriggerZoneEntry(point, eventId, radius, oneShot, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Event Trigger Zone");
         }
     }

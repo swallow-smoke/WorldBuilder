@@ -25,5 +25,14 @@ namespace WorldBuilder.Editor
         {
             return Tools;
         }
+
+        public static T GetByInterface<T>() where T : class
+        {
+            for (int i = 0; i < Tools.Count; i++)
+            {
+                if (Tools[i] is T match) return match;
+            }
+            return null;
+        }
     }
 }

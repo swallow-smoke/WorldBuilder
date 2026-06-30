@@ -12,6 +12,7 @@ namespace WorldBuilder.Editor
         public const string Collaboration = "협업";
         public const string Physics = "물리";
         public const string World = "월드";
+        public const string Hub = "허브";
         public const string AstraNope = "ETC";
         public const string Fallback = "기타";
     }

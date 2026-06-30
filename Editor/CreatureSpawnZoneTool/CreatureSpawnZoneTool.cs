@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Data;
 using WorldBuilder.Runtime.Zones;
 
@@ -87,6 +88,9 @@ namespace WorldBuilder.Editor.CreatureSpawnZoneTool
 
         private void Place(Vector3 point)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Creature Spawn Zone");
+
             GameObject go = new GameObject("CreatureSpawnZone");
             go.transform.position = point;
 
@@ -97,6 +101,14 @@ namespace WorldBuilder.Editor.CreatureSpawnZoneTool
             zone.Density = density;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Creature Spawn Zone");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new CreatureSpawnZoneEntry(point, biome, prefabId, density, radius, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Creature Spawn Zone");
         }
 

@@ -133,7 +133,12 @@ namespace WorldBuilder.Editor
             { "help.staticFlag", "범위와 Static 플래그를 정하고 Set/Clear로 대상 오브젝트의 Static 플래그를 일괄 변경합니다. 실행 취소를 지원합니다." },
             { "help.objectSnap", "Grid 또는 Surface 모드를 켜면 선택 오브젝트를 드래그 후 그리드/표면에 스냅합니다." },
             { "help.transformBatch", "탭에서 선택 오브젝트를 정렬·분산하거나 Transform을 초기화합니다. 실행 취소를 지원합니다." },
-            { "help.terrainSculpt", "모드와 브러시 반경·강도를 정하고 씬을 칠해 복셀 밀도를 조각합니다. 결과는 복셀 스토어에 저장됩니다." }
+            { "help.terrainSculpt", "모드와 브러시 반경·강도를 정하고 씬을 칠해 복셀 밀도를 조각합니다. 결과는 복셀 스토어에 저장됩니다." },
+            { "tool.worldDataBrowser", "월드 데이터 브라우저" },
+            { "tool.worldStatistics", "월드 통계" },
+            { "category.hub", "허브" },
+            { "help.worldDataBrowser", "WorldDataStore 에셋을 지정하면 배치된 모든 월드 데이터를 타입별로 탐색할 수 있습니다. 검색·필터로 항목을 찾고 더블클릭으로 씬 위치로 이동합니다." },
+            { "help.worldStatistics", "씬 전체 렌더링·물리·조명·WorldBuilder 데이터 통계를 표시합니다. 항목을 클릭하면 월드 데이터 브라우저에서 해당 타입으로 필터링합니다. Refresh로 수동 갱신합니다." }
         };
 
         private static readonly Dictionary<string, string> EnglishTable = new Dictionary<string, string>
@@ -256,7 +261,12 @@ namespace WorldBuilder.Editor
             { "help.staticFlag", "Choose scope and static flags, then Set/Clear to batch-change object static flags. Supports undo." },
             { "help.objectSnap", "Enable Grid or Surface mode to snap the dragged selection to the grid or a surface." },
             { "help.transformBatch", "Use the tabs to align/distribute the selection or reset its transform. Supports undo." },
-            { "help.terrainSculpt", "Set a mode and brush radius/strength, then paint in the scene to sculpt voxel density. Results are saved to the voxel store." }
+            { "help.terrainSculpt", "Set a mode and brush radius/strength, then paint in the scene to sculpt voxel density. Results are saved to the voxel store." },
+            { "tool.worldDataBrowser", "World Data Browser" },
+            { "tool.worldStatistics", "World Statistics" },
+            { "category.hub", "Hub" },
+            { "help.worldDataBrowser", "Assign a WorldDataStore asset to browse all placed world data by type. Search and filter entries, then double-click to frame the scene location." },
+            { "help.worldStatistics", "Displays rendering, physics, lighting, and WorldBuilder data statistics for the entire scene. Click an item to filter by type in the World Data Browser. Press Refresh to update." }
         };
 
         private static Language current = (Language)EditorPrefs.GetInt(PrefKey, (int)Language.Korean);

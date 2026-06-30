@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.WaterCurrentTool
@@ -120,6 +121,9 @@ namespace WorldBuilder.Editor.WaterCurrentTool
 
         private void Place(Vector3 point, Vector3 dir)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Water Current");
+
             GameObject go = new GameObject("WaterCurrent");
             go.transform.position = point;
 
@@ -128,6 +132,14 @@ namespace WorldBuilder.Editor.WaterCurrentTool
             zone.Strength = strength;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Water Current");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new WaterCurrentEntry(point, dir, strength, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Water Current");
         }
     }

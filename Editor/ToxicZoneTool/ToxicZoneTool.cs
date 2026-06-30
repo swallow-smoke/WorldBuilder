@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.ToxicZoneTool
@@ -81,6 +82,9 @@ namespace WorldBuilder.Editor.ToxicZoneTool
 
         private void Place(Vector3 point)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Toxic Zone");
+
             GameObject go = new GameObject("ToxicZone");
             go.transform.position = point;
 
@@ -90,6 +94,14 @@ namespace WorldBuilder.Editor.ToxicZoneTool
             zone.DamagePerSecond = damagePerSecond;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Toxic Zone");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new ToxicZoneEntry(point, radius, intensity, damagePerSecond, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Toxic Zone");
         }
 

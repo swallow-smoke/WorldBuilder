@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.AirPocketTool
@@ -91,6 +92,9 @@ namespace WorldBuilder.Editor.AirPocketTool
 
         private void Place(Vector3 point)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Air Pocket");
+
             GameObject go = new GameObject("AirPocket");
             go.transform.position = point;
 
@@ -103,6 +107,14 @@ namespace WorldBuilder.Editor.AirPocketTool
             box.size = size;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Air Pocket");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new AirPocketEntry(point, size, label, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Air Pocket");
         }
     }

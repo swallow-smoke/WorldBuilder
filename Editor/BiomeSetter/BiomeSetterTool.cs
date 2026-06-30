@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Data;
 
 namespace WorldBuilder.Editor.BiomeSetter
@@ -86,10 +87,26 @@ namespace WorldBuilder.Editor.BiomeSetter
                     if (eraseMode)
                     {
                         biomeMap.Remove(coord);
+                        WorldDataStore store = WorldDataStoreLocator.Active;
+                        if (store != null)
+                        {
+                            Undo.RecordObject(store, "Erase Biome");
+                            store.RemoveWhere<BiomeEntry>(entry => entry.ChunkCoord == coord);
+                            EditorUtility.SetDirty(store);
+                        }
                     }
                     else
                     {
                         biomeMap.Set(coord, selectedBiome);
+                        WorldDataStore store = WorldDataStoreLocator.Active;
+                        if (store != null)
+                        {
+                            Undo.RecordObject(store, "Set Biome");
+                            store.RemoveWhere<BiomeEntry>(entry => entry.ChunkCoord == coord);
+                            Vector3 worldCenter = calculator.ToWorldCenter(coord, chunkSize);
+                            store.Add(new BiomeEntry(worldCenter, selectedBiome, coord, chunkSize));
+                            EditorUtility.SetDirty(store);
+                        }
                     }
                     e.Use();
                     SceneView.RepaintAll();

@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.TemperatureZoneTool
@@ -81,6 +82,9 @@ namespace WorldBuilder.Editor.TemperatureZoneTool
 
         private void Place(Vector3 point)
         {
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Temperature Zone");
+
             GameObject go = new GameObject("TemperatureZone");
             go.transform.position = point;
 
@@ -89,6 +93,14 @@ namespace WorldBuilder.Editor.TemperatureZoneTool
             zone.Temperature = temperature;
 
             Undo.RegisterCreatedObjectUndo(go, "Place Temperature Zone");
+
+            if (store != null)
+            {
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+                store.Add(new TemperatureZoneEntry(point, radius, temperature, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Temperature Zone");
         }
 

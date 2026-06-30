@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using WorldBuilder.Editor.ZoneEntries;
 using WorldBuilder.Runtime.Zones;
 
 namespace WorldBuilder.Editor.WreckageTool
@@ -84,6 +85,9 @@ namespace WorldBuilder.Editor.WreckageTool
                 return;
             }
 
+            WorldDataStore store = WorldDataStoreLocator.Active;
+            if (store != null) Undo.RecordObject(store, "Place Wreckage");
+
             GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             instance.transform.position = point;
 
@@ -95,6 +99,15 @@ namespace WorldBuilder.Editor.WreckageTool
             tag.LogNumber = logNumber;
 
             Undo.RegisterCreatedObjectUndo(instance, "Place Wreckage");
+
+            if (store != null)
+            {
+                string prefabGuid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(prefab));
+                string globalId = GlobalObjectId.GetGlobalObjectIdSlow(instance).ToString();
+                store.Add(new WreckageEntry(point, prefabGuid, logNumber, globalId));
+                EditorUtility.SetDirty(store);
+            }
+
             UndoHistory.Push("Place Wreckage");
         }
     }

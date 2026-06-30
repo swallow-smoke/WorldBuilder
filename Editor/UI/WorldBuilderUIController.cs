@@ -11,6 +11,7 @@ namespace WorldBuilder.Editor
 
         private static readonly string[] CategoryOrder =
         {
+            WorldBuilderCategory.Hub,
             WorldBuilderCategory.Productivity,
             WorldBuilderCategory.Debug,
             WorldBuilderCategory.Automation,
@@ -86,6 +87,11 @@ namespace WorldBuilder.Editor
             inspectorContainer.Add(tool.CreateInspectorGUI());
 
             ToolSelected?.Invoke(tool);
+        }
+
+        public void SelectTool(IWorldBuilderTool tool, VisualElement inspectorContainer)
+        {
+            OnToolSelected(tool, inspectorContainer);
         }
 
         public void OnLanguageToggle(Label statusLabel)
