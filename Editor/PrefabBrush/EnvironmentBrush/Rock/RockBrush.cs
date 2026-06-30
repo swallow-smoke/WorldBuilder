@@ -224,11 +224,11 @@ namespace WorldBuilder.Editor.PrefabBrush.EnvironmentBrush.Rock
                     {
                         int i = start + y * stride + x;
                         triangles.Add(i);
+                        triangles.Add(i + stride + 1);
                         triangles.Add(i + stride);
-                        triangles.Add(i + stride + 1);
                         triangles.Add(i);
-                        triangles.Add(i + stride + 1);
                         triangles.Add(i + 1);
+                        triangles.Add(i + stride + 1);
                     }
                 }
             }

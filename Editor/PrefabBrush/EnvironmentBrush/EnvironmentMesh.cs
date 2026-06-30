@@ -147,7 +147,7 @@ namespace WorldBuilder.Editor.PrefabBrush
                 for (int s = 0; s < sides; s++)
                 {
                     int next = (s + 1) % sides;
-                    mesh.Quad(ringA + s, ringB + s, ringB + next, ringA + next);
+                    mesh.Quad(ringA + s, ringA + next, ringB + next, ringB + s);
                 }
             }
         }

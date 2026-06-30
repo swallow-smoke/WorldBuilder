@@ -222,14 +222,14 @@ namespace WorldBuilder.Editor.PrefabBrush.EnvironmentBrush.Coral
             int pz = mesh.Add(center + Vector3.forward * size, new Vector2(0.75f, 0.5f), color);
             int nz = mesh.Add(center - Vector3.forward * size, new Vector2(0.25f, 0.5f), color);
 
-            mesh.Triangle(top, px, pz);
-            mesh.Triangle(top, pz, nx);
-            mesh.Triangle(top, nx, nz);
-            mesh.Triangle(top, nz, px);
-            mesh.Triangle(bottom, pz, px);
-            mesh.Triangle(bottom, nx, pz);
-            mesh.Triangle(bottom, nz, nx);
-            mesh.Triangle(bottom, px, nz);
+            mesh.Triangle(top, pz, px);
+            mesh.Triangle(top, nx, pz);
+            mesh.Triangle(top, nz, nx);
+            mesh.Triangle(top, px, nz);
+            mesh.Triangle(bottom, px, pz);
+            mesh.Triangle(bottom, pz, nx);
+            mesh.Triangle(bottom, nx, nz);
+            mesh.Triangle(bottom, nz, px);
         }
     }
 }
